@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit
 
 fun scheduleDailyAlarms(context: Context, times: List<String>) {
     val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    val interval = AlarmManager.INTERVAL_DAY
 
     for (time in times) {
         val (hour, minute) = timeTo24HourFormat(time)
@@ -18,6 +19,11 @@ fun scheduleDailyAlarms(context: Context, times: List<String>) {
             set(Calendar.HOUR_OF_DAY, hour)
             set(Calendar.MINUTE, minute)
             set(Calendar.SECOND, 0)
+        }
+
+        // Check if the scheduled time has already passed for today, and if so, schedule it for tomorrow.
+        if (calendar.timeInMillis < System.currentTimeMillis()) {
+            calendar.add(Calendar.DAY_OF_YEAR, 1)
         }
 
         val requestCode = hour * 100 + minute // Unique request code
@@ -31,13 +37,15 @@ fun scheduleDailyAlarms(context: Context, times: List<String>) {
             PendingIntent.FLAG_IMMUTABLE
         )
 
-        alarmManager.setExactAndAllowWhileIdle(
+        alarmManager.setRepeating(
             AlarmManager.RTC_WAKEUP,
             calendar.timeInMillis,
+            interval,
             pendingIntent
         )
     }
 }
+
 
 fun timeTo24HourFormat(time: String): Pair<Int, Int> {
     val parts = time.split(":")
