@@ -69,11 +69,11 @@ fun FragDummyScreen() {
         verticalArrangement = Arrangement.Center
     ) {
         val times = listOf(
-            "16:42:00",
-            "16:48:00",
-            "16:52:00",
-            "16:55:00",
-            "16:56:00",
+            "18:41:00",
+            "18:44:00",
+            "18:46:00",
+            "18:48:00",
+            "18:50:00",
         )
 
         Column(modifier = Modifier.padding(16.dp)) {
