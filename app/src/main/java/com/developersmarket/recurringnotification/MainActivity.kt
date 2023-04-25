@@ -1,7 +1,12 @@
 package com.developersmarket.recurringnotification
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -16,8 +21,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat.getSystemService
 import com.developersmarket.recurringnotification.notification.scheduleDailyAlarms
 import com.developersmarket.recurringnotification.notification.storeTimes
 import com.developersmarket.recurringnotification.ui.theme.RecurringNotificationTheme
@@ -39,19 +44,37 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+fun requestIgnoreBatteryOptimizations(context: Context) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        val packageName = context.packageName
+        val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
+        if (!pm.isIgnoringBatteryOptimizations(packageName)) {
+            val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+                data = Uri.parse("package:$packageName")
+            }
+            context.startActivity(intent)
+        }
+    }
+
+}
+
 @Composable
 fun FragDummyScreen() {
     val context = LocalContext.current
+    requestIgnoreBatteryOptimizations(context)
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         val times = listOf(
-            "15:22:00",
-            "15:25:00",
-            "15:27:00"
-        ) // You can replace this with the user-provided list of times
+            "16:42:00",
+            "16:48:00",
+            "16:52:00",
+            "16:55:00",
+            "16:56:00",
+        )
 
         Column(modifier = Modifier.padding(16.dp)) {
             storeTimes(context, times)
