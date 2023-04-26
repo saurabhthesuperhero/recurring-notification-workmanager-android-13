@@ -35,7 +35,4 @@ class AlarmReceiver : BroadcastReceiver() {
         scheduleNextAlarm(context, time, calendar.timeInMillis)
     }
 
-
-
-
 }

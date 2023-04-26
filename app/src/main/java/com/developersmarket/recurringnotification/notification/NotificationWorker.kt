@@ -11,16 +11,19 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat.getSystemService
+import androidx.work.CoroutineWorker
 import com.developersmarket.recurringnotification.R
 
 class NotificationWorker(appContext: Context, workerParams: WorkerParameters) :
-    Worker(appContext, workerParams) {
+    CoroutineWorker(appContext, workerParams) {
     val context = appContext
 
-    override fun doWork(): Result {
-        // Perform your background task, e.g. API call or calculations
-        // ...
+    override suspend fun doWork(): Result {
+
         val time = inputData.getString("time") ?: ""
+        // Perform your background task using coroutines, e.g. API call or calculations
+        // ...
+
         // Show the notification
         showNotification(time, "notification_recurring", context)
         // Return the result
